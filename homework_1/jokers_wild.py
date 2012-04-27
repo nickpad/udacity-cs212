@@ -25,40 +25,24 @@
 # hands: 4 kings along with any of the three queens).
 
 import itertools
-from copy import copy
 
-joker_cards = {
-    'black' : [r+s for r in '23456789TJQKA' for s in 'CS'],
-    'red'   : [r+s for r in '23456789TJQKA' for s in 'HD']
+all_ranks = '23456789TJQKA'
+
+jokers = {
+    '?B' : [r+s for r in all_ranks for s in 'CS'],
+    '?R' : [r+s for r in all_ranks for s in 'HD']
 }
 
 def best_wild_hand(hand):
     """Try all values for jokers in all 5-card selections."""
-    black = [card for card in joker_cards['black'] if card not in hand]
-    red   = [card for card in joker_cards['red']   if card not in hand]
+    replaced = [jokers.get(card, [card]) for card in hand]
+    hands = set(best_hand(h) for h in itertools.product(*replaced))
+    return max(hands, key=best_hand)
 
-    black_jokers = [card for card in hand if card == '?B']
-    red_jokers   = [card for card in hand if card == '?R']
-
-    standard_hand = [card for card in hand if card[0] != '?']
-
-    black_decks = ((black,) * len(black_jokers))
-    red_decks = ((red,) * len(red_jokers))
-    joker_decks = black_decks + red_decks
-    combos = []
-
-    for x in itertools.product((standard_hand,), *joker_decks):
-        combination = copy(x[0])
-        for card in x[1:]: combination.append(card)
-        combos.append(combination)
-
-    five_card_hands = set()
-
-    for hand in combos:
-        for five_card_hand in itertools.combinations(hand, 5):
-            five_card_hands.add(five_card_hand)
-
-    return max(five_card_hands, key=hand_rank)
+def best_hand(hand):
+    """From a 7-card hand, return the best 5 card hand."""
+    combos = itertools.combinations(hand, 5)
+    return max(combos, key=hand_rank)
 
 def test_best_wild_hand():
     assert (sorted(best_wild_hand("6C 7C 8C 9C TC 5C ?B".split()))
