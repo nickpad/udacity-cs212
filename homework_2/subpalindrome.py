@@ -16,6 +16,7 @@
 # Please do not use regular expressions to solve this quiz!
 
 import itertools
+import lorem
 
 def longest_subpalindrome_slice(text):
     "Return (i, j) such that text[i:j] is the longest palindrome in text."
@@ -56,4 +57,5 @@ def test():
     assert L('Mad am I ma dam.') == (0, 15)
     return 'tests pass'
 
+print(longest_subpalindrome_slice(lorem.text))
 print(test())
