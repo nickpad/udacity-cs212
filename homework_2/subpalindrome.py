@@ -21,11 +21,12 @@ def longest_subpalindrome_slice(text):
     "Return (i, j) such that text[i:j] is the longest palindrome in text."
     if len(text) <= 1: return (0, len(text))
 
+    text = text.lower()
+
     letter_map = {}
     candidates = []
 
-    for i, c in enumerate(text):
-        key = c.lower()
+    for i, key in enumerate(text):
         value = letter_map.get(key, [])
         value.append(i)
         letter_map[key] = value
@@ -40,7 +41,7 @@ def longest_subpalindrome_slice(text):
     candidates.sort(reverse=True)
 
     for _, start, end in candidates:
-        candidate = text[start:end].lower()
+        candidate = text[start:end]
         if candidate == candidate[::-1]: return (start, end)
 
 def test():
