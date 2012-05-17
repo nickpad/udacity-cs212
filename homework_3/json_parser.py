@@ -108,21 +108,12 @@ elements => value , elements | value
 value => string | number | object | array | true | false | null
 string => "[^"\\\\]*"
 chars => char chars | char
-char => [^"\\\\]+ | \\\\" | \\\\ |  \\\\/ | \\\\b | \\\\f | \\\\n | \\\\r | \\\\t | \u[0-8a-fA-F]{4}
+char => [^"\\\\]+ | \\\\" | \\\\ |  \\\\/ | \\\\b | \\\\f | \\\\n | \\\\r | \\\\t | \\u[0-8a-fA-F]{4}
 number => int frac exp | int frac | int exp | int
 int => ([\+-]?)[0-9]+
 frac => \.[0-9]+
 exp => [eE][+-]\d+
 """.strip(), whitespace='\s*')
-
-def verify(G):
-    lhstokens = set(G) - set([' '])
-    rhstokens = set(t for alts in G.values() for alt in alts for t in alt)
-    def show(title, tokens): print title,'=',' '.join(sorted(tokens))
-    show('Non-Terms', G)
-    show('Terminals', rhstokens - lhstokens)
-    show('Suspects ', [t for t in (rhstokens - lhstokens) if t.isalnum()])
-    show('Orphans  ', lhstokens - rhstokens)
 
 def json_parse(text):
     return parse('value', text, JSON)
